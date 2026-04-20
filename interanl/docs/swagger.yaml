@@ -1,0 +1,268 @@
+basePath: /
+definitions:
+  dto.CreateSubscriptionRequest:
+    properties:
+      end_date:
+        example: 12-2025
+        type: string
+      price:
+        example: 400
+        type: integer
+      service_name:
+        example: Yandex Plus
+        type: string
+      start_date:
+        example: 07-2025
+        type: string
+      user_id:
+        example: 60601fee-2bf1-4721-ae6f-7636e79a0cba
+        type: string
+    type: object
+  dto.SubscriptionResponse:
+    properties:
+      created_at:
+        example: "2025-07-01T00:00:00Z"
+        type: string
+      end_date:
+        example: 12-2025
+        type: string
+      id:
+        example: 1
+        type: integer
+      price:
+        example: 400
+        type: integer
+      service_name:
+        example: Yandex Plus
+        type: string
+      start_date:
+        example: 07-2025
+        type: string
+      updated_at:
+        example: "2025-07-01T00:00:00Z"
+        type: string
+      user_id:
+        example: 60601fee-2bf1-4721-ae6f-7636e79a0cba
+        type: string
+    type: object
+  dto.SumRequest:
+    properties:
+      from:
+        example: 01-2025
+        type: string
+      service_name:
+        example: Yandex Plus
+        type: string
+      to:
+        example: 12-2025
+        type: string
+      user_id:
+        example: 60601fee-2bf1-4721-ae6f-7636e79a0cba
+        type: string
+    type: object
+  dto.SumResponse:
+    properties:
+      total:
+        example: 1200
+        type: integer
+    type: object
+  dto.UpdateSubscriptionRequest:
+    properties:
+      end_date:
+        example: 12-2025
+        type: string
+      price:
+        example: 400
+        type: integer
+      service_name:
+        example: Yandex Plus
+        type: string
+      start_date:
+        example: 07-2025
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: API для управления подписками пользователей
+  title: Effmobi Subscriptions API
+  version: "1.0"
+paths:
+  /subscriptions:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.SubscriptionResponse'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Список всех подписок
+      tags:
+      - subscriptions
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Данные подписки
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateSubscriptionRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.SubscriptionResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "422":
+          description: Unprocessable Entity
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Создать подписку
+      tags:
+      - subscriptions
+  /subscriptions/{id}:
+    delete:
+      parameters:
+      - description: ID подписки
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Удалить подписку
+      tags:
+      - subscriptions
+    get:
+      parameters:
+      - description: ID подписки
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.SubscriptionResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Получить подписку по ID
+      tags:
+      - subscriptions
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: ID подписки
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Новые данные подписки
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateSubscriptionRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.SubscriptionResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "422":
+          description: Unprocessable Entity
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Обновить подписку
+      tags:
+      - subscriptions
+  /subscriptions/sum:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Фильтры и период
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SumRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.SumResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "422":
+          description: Unprocessable Entity
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Подсчёт суммарной стоимости подписок за период
+      tags:
+      - subscriptions
+swagger: "2.0"
